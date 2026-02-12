@@ -25,12 +25,13 @@
 //! This crate is a derivative work. The test pattern generation and filter
 //! reconstruction algorithms are ported from the original C source.
 //!
-//! ## Reference resize implementation
+//! ## Filter implementations
 //!
-//! The [`reference`] module (weight table computation, separable 2D resize) is
-//! derived from [imageflow](https://github.com/imazen/imageflow) by Imazen.
-//! The reference filter math in [`filters`] uses standard mathematical definitions
-//! (sinc, Mitchell-Netravali, etc.).
+//! The reference filter math in [`filters`] and the separable 2D resize in
+//! [`reference`] use standard mathematical definitions (sinc, Mitchell-Netravali,
+//! etc.) and standard resampling algorithms. The authoritative, optimized
+//! implementations of these filters live in
+//! [imageflow](https://github.com/imazen/imageflow) by Imazen.
 
 pub mod analyze;
 pub mod edge;
