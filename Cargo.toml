@@ -14,10 +14,16 @@ exclude = ["tests/local_only/"]
 [lib]
 name = "resamplescope"
 
+[features]
+c-reference = ["dep:cc"]
+
 [dependencies]
 imgref = "1"
 rgb = { version = "0.8", default-features = false }
 thiserror = "2"
+
+[build-dependencies]
+cc = { version = "1", optional = true }
 
 [dev-dependencies]
 png = "0.17"
