@@ -442,10 +442,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "resamplescope"
+name = "resamplescope-rs"
 version = "0.1.0"
 dependencies = [
  "imgref",
+ "linear-srgb",
  "png",
  "rgb",
  "thiserror",
