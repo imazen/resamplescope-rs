@@ -8,6 +8,7 @@ description = "Reverse-engineer the resampling filter used by any image resizer"
 repository = "https://github.com/imazen/resamplescope-rs"
 keywords = ["image", "resampling", "filter", "analysis", "quality"]
 categories = ["graphics", "multimedia::images"]
+readme = "README.md"
 exclude = ["tests/local_only/"]
 
 [lib]
