@@ -12,15 +12,19 @@
 //! reference filters, SSIM comparison against perfect reference weight tables, and edge
 //! handling detection.
 //!
+//! ## License
+//!
+//! AGPL-3.0-or-later. See [`LICENSE`](https://github.com/imazen/resamplescope-rs/blob/main/LICENSE).
+//! For commercial licensing, visit <https://imageresizing.net/pricing>.
+//!
 //! ## Original work
 //!
 //! - **Author**: Jason Summers
 //! - **Website**: <http://entropymine.com/resamplescope/>
 //! - **License**: GPL-3.0-or-later
 //!
-//! This crate is a derivative work licensed under GPL-3.0-or-later to comply with
-//! the original license. The test pattern generation and filter reconstruction
-//! algorithms are ported from the original C source.
+//! This crate is a derivative work. The test pattern generation and filter
+//! reconstruction algorithms are ported from the original C source.
 //!
 //! ## Note on filter implementations
 //!
