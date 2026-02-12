@@ -162,7 +162,7 @@ fn graph_rendering() {
 fn weight_table_correctness() {
     // Verify that applying computed weights to a constant image produces the same constant.
     let weights = resamplescope::compute_weights(KnownFilter::Lanczos3, 15, 555);
-    let src = vec![100u8; 15];
+    let src = [100u8; 15];
     let dst: Vec<u8> = weights
         .iter()
         .map(|pw| {

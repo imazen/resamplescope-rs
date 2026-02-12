@@ -8,6 +8,7 @@ description = "Reverse-engineer the resampling filter used by any image resizer"
 repository = "https://github.com/imazen/resamplescope-rs"
 keywords = ["image", "resampling", "filter", "analysis", "quality"]
 categories = ["graphics", "multimedia::images"]
+exclude = ["tests/local_only/"]
 
 [lib]
 name = "resamplescope"
@@ -19,8 +20,3 @@ thiserror = "2"
 
 [dev-dependencies]
 png = "0.17"
-# Note: zenimage's resampling filters are derived from imageflow and are
-# dual-licensed AGPL-3.0-or-later / commercial. They are used here only
-# for testing (dev-dependency) and do not affect the license of this crate.
-zenimage = { path = "/home/lilith/work/zenimage", default-features = false }
-linear-srgb = { path = "/home/lilith/work/linear-srgb", default-features = false, features = ["std"] }

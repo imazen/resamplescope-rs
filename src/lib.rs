@@ -15,7 +15,6 @@
 //! ## License
 //!
 //! AGPL-3.0-or-later. See [`LICENSE`](https://github.com/imazen/resamplescope-rs/blob/main/LICENSE).
-//! For commercial licensing, visit <https://imageresizing.net/pricing>.
 //!
 //! ## Original work
 //!
@@ -26,12 +25,12 @@
 //! This crate is a derivative work. The test pattern generation and filter
 //! reconstruction algorithms are ported from the original C source.
 //!
-//! ## Note on filter implementations
+//! ## Reference resize implementation
 //!
+//! The [`reference`] module (weight table computation, separable 2D resize) is
+//! derived from [imageflow](https://github.com/imazen/imageflow) by Imazen.
 //! The reference filter math in [`filters`] uses standard mathematical definitions
-//! (sinc, Mitchell-Netravali, etc.) that are not copyrightable. The authoritative
-//! filter implementations for imageflow and zenimage are separately maintained and
-//! are dual-licensed AGPL-3.0-or-later / commercial by Imazen.
+//! (sinc, Mitchell-Netravali, etc.).
 
 pub mod analyze;
 pub mod edge;

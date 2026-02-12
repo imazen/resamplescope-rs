@@ -136,7 +136,7 @@ mod tests {
     fn edge_pattern_column_at_x1() {
         let img = generate_edge_pattern();
         for y in 0..LINE_SRC_HEIGHT {
-            assert_eq!(img.buf()[y * LINE_SRC_WIDTH + 0], DARK);
+            assert_eq!(img.buf()[y * LINE_SRC_WIDTH], DARK);
             assert_eq!(img.buf()[y * LINE_SRC_WIDTH + 1], BRIGHT);
             assert_eq!(img.buf()[y * LINE_SRC_WIDTH + 2], DARK);
         }
