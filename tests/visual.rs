@@ -5,8 +5,10 @@ use std::path::{Path, PathBuf};
 
 fn output_dir() -> PathBuf {
     PathBuf::from(
-        std::env::var("RESAMPLESCOPE_OUTPUT_DIR")
-            .unwrap_or_else(|_| "/mnt/v/output/resamplescope".into()),
+        std::env::var("RESAMPLESCOPE_OUTPUT_DIR").unwrap_or_else(|_| {
+            let target = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("target/output");
+            target.to_string_lossy().into_owned()
+        }),
     )
 }
 
