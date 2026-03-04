@@ -2,7 +2,14 @@ use imgref::{ImgRef, ImgVec};
 use linear_srgb::default::{linear_to_srgb_u8, srgb_u8_to_linear};
 use resamplescope::{AnalysisConfig, KnownFilter};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+
+fn output_dir() -> PathBuf {
+    PathBuf::from(
+        std::env::var("RESAMPLESCOPE_OUTPUT_DIR")
+            .unwrap_or_else(|_| "/mnt/v/output/resamplescope".into()),
+    )
+}
 
 fn write_rgb_png(path: &Path, img: &ImgVec<rgb::RGB8>) {
     let file = fs::File::create(path).unwrap();
@@ -124,8 +131,8 @@ fn linear_srgb_monotonicity() {
 /// analyzed by resamplescope with srgb=true, should identify as Triangle.
 #[test]
 fn linear_srgb_bilinear_identified_as_triangle() {
-    let out = Path::new("/mnt/v/output/resamplescope/linear_srgb");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("linear_srgb");
+    fs::create_dir_all(&out).unwrap();
 
     let srgb_bilinear = with_linear_srgb(bilinear_resize_raw);
 
@@ -182,8 +189,8 @@ fn linear_srgb_bilinear_identified_as_triangle() {
 /// with linear-srgb conversion and verify resamplescope identifies it.
 #[test]
 fn linear_srgb_lanczos3_identification() {
-    let out = Path::new("/mnt/v/output/resamplescope/linear_srgb");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("linear_srgb");
+    fs::create_dir_all(&out).unwrap();
 
     let srgb_lanczos = with_linear_srgb(|src, w, h| {
         resamplescope::perfect_resize(src, w, h, KnownFilter::Lanczos3)
@@ -222,8 +229,8 @@ fn linear_srgb_lanczos3_identification() {
 /// Survey all reference filters through linear-srgb pipeline.
 #[test]
 fn linear_srgb_all_filters_survey() {
-    let out = Path::new("/mnt/v/output/resamplescope/linear_srgb");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("linear_srgb");
+    fs::create_dir_all(&out).unwrap();
 
     let config = AnalysisConfig {
         srgb: true,

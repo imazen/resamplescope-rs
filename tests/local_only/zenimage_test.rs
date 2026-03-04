@@ -1,7 +1,14 @@
 use imgref::{ImgRef, ImgVec};
 use resamplescope::{AnalysisConfig, KnownFilter};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+
+fn output_dir() -> PathBuf {
+    PathBuf::from(
+        std::env::var("RESAMPLESCOPE_OUTPUT_DIR")
+            .unwrap_or_else(|_| "/mnt/v/output/resamplescope".into()),
+    )
+}
 use zenimage::graphics::filters::Filter as ZenFilter;
 use zenimage::graphics::resize::{resize_linear, ResizeOptions};
 
@@ -82,8 +89,8 @@ fn expected_matches() -> Vec<(ZenFilter, &'static str, Option<KnownFilter>)> {
 
 #[test]
 fn zenimage_filter_identification_linear() {
-    let out = Path::new("/mnt/v/output/resamplescope/zenimage");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("zenimage");
+    fs::create_dir_all(&out).unwrap();
 
     let config = AnalysisConfig {
         srgb: false,
@@ -145,8 +152,8 @@ fn zenimage_filter_identification_linear() {
 
 #[test]
 fn zenimage_filter_identification_srgb() {
-    let out = Path::new("/mnt/v/output/resamplescope/zenimage");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("zenimage");
+    fs::create_dir_all(&out).unwrap();
 
     let config = AnalysisConfig {
         srgb: true,
@@ -220,8 +227,8 @@ fn zenimage_filter_identification_srgb() {
 /// This is informational - prints what resamplescope thinks each filter is.
 #[test]
 fn zenimage_all_filters_survey() {
-    let out = Path::new("/mnt/v/output/resamplescope/zenimage");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir().join("zenimage");
+    fs::create_dir_all(&out).unwrap();
 
     let config = AnalysisConfig {
         srgb: false,

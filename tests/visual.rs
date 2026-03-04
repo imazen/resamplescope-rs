@@ -1,7 +1,14 @@
 use imgref::{ImgRef, ImgVec};
 use resamplescope::{AnalysisConfig, KnownFilter};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
+
+fn output_dir() -> PathBuf {
+    PathBuf::from(
+        std::env::var("RESAMPLESCOPE_OUTPUT_DIR")
+            .unwrap_or_else(|_| "/mnt/v/output/resamplescope".into()),
+    )
+}
 
 fn write_rgb_png(path: &Path, img: &ImgVec<rgb::RGB8>) {
     let file = fs::File::create(path).unwrap();
@@ -52,8 +59,8 @@ fn bilinear_resize(src: ImgRef<'_, u8>, dst_w: usize, dst_h: usize) -> ImgVec<u8
 
 #[test]
 fn write_visual_output() {
-    let out = Path::new("/mnt/v/output/resamplescope");
-    fs::create_dir_all(out).unwrap();
+    let out = output_dir();
+    fs::create_dir_all(&out).unwrap();
 
     let config = AnalysisConfig {
         srgb: false,
