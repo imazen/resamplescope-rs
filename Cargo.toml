@@ -26,4 +26,4 @@ thiserror = "2"
 cc = { version = "1", optional = true }
 
 [dev-dependencies]
-png = "0.17"
+png = "0.18"
