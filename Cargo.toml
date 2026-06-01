@@ -9,7 +9,12 @@ repository = "https://github.com/imazen/resamplescope-rs"
 keywords = ["image", "resampling", "filter", "analysis", "quality"]
 categories = ["graphics", "multimedia::images"]
 readme = "README.md"
-exclude = ["tests/local_only/"]
+exclude = [
+    "tests/",
+    ".gitignore",
+    ".workongoing",
+    ".jj/",
+]
 
 [lib]
 name = "resamplescope"
