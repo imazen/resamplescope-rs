@@ -19,10 +19,31 @@ reference filters, SSIM comparison, and edge handling detection.
 4. Scores the result against known filters (Box, Triangle, Hermite, Mitchell, Lanczos, etc.)
 5. Returns the best match with correlation, RMS error, and detected support radius
 
+## Add to Cargo.toml
+
+The public API hands you `imgref` and `rgb` types directly (your resize closure
+takes an `ImgRef<'_, u8>` and returns an `ImgVec<u8>`; graphs come back as
+`ImgVec<RGB8>`), so add both as direct dependencies alongside this crate. Match
+the versions this crate is built against:
+
+```toml
+[dependencies]
+resamplescope-rs = "0.1.0"
+imgref = "1"
+rgb = { version = "0.8", default-features = false }
+```
+
+`rgb` is pulled in with `default-features = false` here because only the plain
+`RGB8` struct is needed for graph output — no extra `rgb` features are required.
+
+(The library crate is named `resamplescope` even though the package is
+`resamplescope-rs`, so imports read `use resamplescope::...`.)
+
 ## Usage
 
 ```rust
 use imgref::{ImgRef, ImgVec};
+use rgb::RGB8;
 use resamplescope::{AnalysisConfig, KnownFilter};
 
 // Wrap your resizer to accept grayscale u8 images.
@@ -43,21 +64,99 @@ if let Some(best) = result.best_match() {
 }
 
 // Render a 600x300 scope graph as ImgVec<RGB8>.
-let graph = result.render_graph();
+let graph: ImgVec<RGB8> = result.render_graph();
 // Or with a reference filter overlay:
 let graph = result.render_graph_with_reference(KnownFilter::Lanczos3);
 ```
 
+`AnalysisConfig` has exactly two fields (it is not `#[non_exhaustive]`, so you
+can construct it with a struct literal as above, or start from
+`AnalysisConfig::default()`):
+
+```rust
+pub struct AnalysisConfig {
+    /// `true` if the resizer works in linear light — i.e. it converts sRGB to
+    /// linear *before* filtering and back *after*. The analyzer then linearizes
+    /// the probe output the same way before reconstructing the kernel. Set
+    /// `false` for a resizer that filters directly on sRGB-encoded samples.
+    pub srgb: bool,
+    /// Whether to run edge-handling detection (fills in `edge_mode`).
+    pub detect_edges: bool,
+}
+```
+
+The default is `srgb: false`, `detect_edges: true`.
+
 ## What you get back
 
-`AnalysisResult` contains:
+`analyze()` returns `Result<AnalysisResult, Error>`. All of the following are
+plain public **fields** (not accessor methods), so you read them directly. None
+of these structs is `#[non_exhaustive]`.
 
-- **`downscale_curve`** -- reconstructed filter from the dot pattern (557->555 downscale)
-- **`upscale_curve`** -- reconstructed filter from the line pattern (15->555 upscale)
-- **`scores`** -- sorted best-first by Pearson correlation against known filters
-- **`edge_mode`** -- detected edge handling (Clamp, Reflect, Wrap, Zero, or Unknown)
+```rust
+pub struct AnalysisResult {
+    /// Filter reconstructed from the dot pattern (557->555 downscale). `None` if
+    /// reconstruction found no usable points.
+    pub downscale_curve: Option<FilterCurve>,
+    /// Filter reconstructed from the line pattern (15->555 upscale). `None` if
+    /// reconstruction found no usable points.
+    pub upscale_curve: Option<FilterCurve>,
+    /// One entry per known filter, sorted best-first by Pearson correlation.
+    pub scores: Vec<FilterScore>,
+    /// Detected edge handling. `None` when `AnalysisConfig::detect_edges` is false.
+    pub edge_mode: Option<EdgeMode>,
+}
 
-Each `FilterScore` includes correlation, RMS error, max error, and detected vs. expected support radius.
+pub struct FilterScore {
+    /// Which reference filter this score is against. Implements `Display`
+    /// (e.g. "Lanczos3", or "Mitchell-Netravali(B=0.333, C=0.333)").
+    pub filter: KnownFilter,
+    /// Pearson correlation coefficient, in -1.0..=1.0. 1.0 is a perfect match.
+    pub correlation: f64,
+    /// Root-mean-square error between reconstructed and reference weights
+    /// (filter-weight units; lower is better).
+    pub rms_error: f64,
+    /// Largest single absolute weight difference (filter-weight units).
+    pub max_error: f64,
+    /// Support radius detected from the reconstructed curve, in source pixels
+    /// (outermost offset where |weight| > 0.005).
+    pub detected_support: f64,
+    /// Support radius the reference filter is defined to have, in source pixels.
+    pub expected_support: f64,
+}
+
+pub struct FilterCurve {
+    /// (offset, weight) sample points. Offset is in source-pixel units
+    /// (distance from the filter center); weight is the normalized filter value.
+    pub points: Vec<(f64, f64)>,
+    /// Integral of the filter (~1.0 for a normalized filter).
+    pub area: f64,
+    /// Scale factor used: dst_width / src_width.
+    pub scale_factor: f64,
+    /// True for the dot pattern (scattered points), false for the line pattern
+    /// (one connected curve).
+    pub is_scatter: bool,
+}
+```
+
+`EdgeMode` is an enum: `Clamp`, `Reflect`, `Wrap`, `Zero`, or `Unknown` (also
+`Display`).
+
+### Picking the best match
+
+`AnalysisResult::best_match() -> Option<&FilterScore>` returns the entry with the
+highest Pearson correlation (the first element of the already-sorted `scores`),
+but only when its `correlation` exceeds `0.99` — otherwise it returns `None`. Use
+the `filter` field (which is `Display`) to name it:
+
+```rust
+if let Some(best) = result.best_match() {
+    println!("Detected: {} (r={:.4})", best.filter, best.correlation);
+}
+```
+
+If you want the top candidate regardless of confidence, read `scores[0]`
+directly instead.
 
 ## Known filters
 
