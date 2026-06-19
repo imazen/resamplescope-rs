@@ -1,4 +1,4 @@
-# resamplescope-rs
+# resamplescope-rs [![CI](https://img.shields.io/github/actions/workflow/status/imazen/resamplescope-rs/ci.yml?style=flat-square&label=CI)](https://github.com/imazen/resamplescope-rs/actions/workflows/ci.yml) [![crates.io](https://img.shields.io/crates/v/resamplescope-rs?style=flat-square)](https://crates.io/crates/resamplescope-rs) [![lib.rs](https://img.shields.io/crates/v/resamplescope-rs?style=flat-square&label=lib.rs&color=blue)](https://lib.rs/crates/resamplescope-rs) [![docs.rs](https://img.shields.io/docsrs/resamplescope-rs?style=flat-square)](https://docs.rs/resamplescope-rs) [![license](https://img.shields.io/crates/l/resamplescope-rs?style=flat-square)](https://github.com/imazen/resamplescope-rs#license)
 
 Reverse-engineer the resampling filter used by any image resizer.
 
