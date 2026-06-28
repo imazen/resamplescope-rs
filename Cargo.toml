@@ -8,7 +8,7 @@ description = "Validate, compare, and plot the resampling filters/kernels used b
 repository = "https://github.com/imazen/resamplescope-rs"
 keywords = ["image", "resampling", "filter", "analysis", "quality"]
 categories = ["graphics", "multimedia::images"]
-readme = "README.md"
+readme = "README.crates.md"
 exclude = [
     "tests/",
     ".gitignore",
