@@ -1,6 +1,6 @@
 <!-- GENERATED FROM README.md by zenutils gen-readme-crates.sh — DO NOT EDIT. -->
 
-# resamplescope-rs [![CI](https://img.shields.io/github/actions/workflow/status/imazen/resamplescope-rs/ci.yml?style=flat-square&label=CI)](https://github.com/imazen/resamplescope-rs/actions/workflows/ci.yml)
+# resamplescope-rs
 
 resamplescope-rs reverse-engineers the resampling filter behind any image resizer. Hand it a resize closure and it reconstructs the filter kernel's shape, names the closest match (Box, Triangle, Hermite, Catmull-Rom, Mitchell, B-Spline, Lanczos2/3/4), reports correlation and support radius, detects the edge-handling mode, and renders a scope graph. A Rust port of Jason Summers' [ResampleScope](http://entropymine.com/resamplescope/), trading the original's file-based round-trip for an in-memory callback API. Pure Rust, `#![forbid(unsafe_code)]`, no image-codec dependencies.
 
